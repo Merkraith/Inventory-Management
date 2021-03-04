@@ -1,4 +1,5 @@
 import React from 'react'
+import StockDetail from './StockDetail'
 
 function StockEventsTable(props) {
     const { products, stockEvents } = props
@@ -6,20 +7,21 @@ function StockEventsTable(props) {
     return (
         <div className="StockEventTable">
             {products.map(product => {
-                const { id } = product
+                const {id} = product
 
                 const releventStockEvents = stockEvents.filter(se => se.product.id === product.id)
+
+                const stockTotal = releventStockEvents.reduce((accumalator, currentElement) => {
+                    return accumalator + currentElement.qty
+                }, 0)
+
                 return (
                     <div className="StockEventTable__ProductsContainer">
-                        <h2>Product: {product.name}</h2>
-                        {releventStockEvents.map(event => (
-                            <div className="StockEventTable__Card">
-                                <p>Id: {event.id}</p>
-                                <p>Type: {event.type}</p>
-                                <p>Quantity: {event.qty}</p>
-                                <p>Product Name: {event.product.name}</p>
-                            </div>
-                        ))}
+                        <StockDetail
+                            name={product.name}
+                            total={stockTotal}
+                            stockEvents={releventStockEvents}
+                        />
                     </div>
                 )
             })}
